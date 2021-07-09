@@ -8,7 +8,7 @@ function PlayerName(name) {
         const content = `${_name}`;   
         
         _element = document.createElement('label');
-        _element.setAttribute("class", "player-name");
+        _element.classList.add("player-name");
         _element.insertAdjacentHTML("afterbegin", content);
         return _element;
     }

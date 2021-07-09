@@ -13,8 +13,10 @@ const $player2 = new PlayerName("Player2");
 $root.insertAdjacentElement("beforeend", $player1.render());
 $root.insertAdjacentElement("beforeend", $player2.render());
 
-const imgs = ["src/images/js-pixel.png", "src/images/html-pixel.png", "src/images/css-pixel.png", 
-    "src/images/js-pixel.png", "src/images/html-pixel.png", "src/images/css-pixel.png"];
+const imgs = [
+    CardGame.FACE_JS, CardGame.FACE_HTML, CardGame.FACE_CSS, 
+    CardGame.FACE_JS, CardGame.FACE_HTML, CardGame.FACE_CSS
+];
 
 const shuffledImgs = [];
 for (let i = 0, len = imgs.length; i < len; i++) {
