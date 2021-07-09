@@ -1,15 +1,16 @@
 import "./style.css"; // vite stuff, not vanilla js
 
 function PlayerName(name) {
-    var name = name;    
+    var _name = name;   
+    var _element; 
 
     this.render = function () {
-        const content = `${name}`;   
+        const content = `${_name}`;   
         
-        const element = document.createElement('label');
-        element.setAttribute("class", "player-name");
-        element.insertAdjacentHTML("afterbegin", content);
-        return element;
+        _element = document.createElement('label');
+        _element.setAttribute("class", "player-name");
+        _element.insertAdjacentHTML("afterbegin", content);
+        return _element;
     }
 }
 

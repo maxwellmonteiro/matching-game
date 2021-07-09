@@ -1,30 +1,34 @@
 import "./style.css"; // vite stuff, not vanilla js
 
-function CardGame(backImgPath) {           
-    var flipped = false;   
-    var backImgPath = backImgPath;
+function CardGame(backImg) {  
+    const FRONT_IMG = "src/images/alura-pixel.png";
+    const CLASS_FRONT = "card-game";
+    const CLASS_BACK = "card-game-back";
+    var _flipped = false;   
+    var _backImg = backImg;
+    var _element;
 
     this.render = function () {    
         const content = `        
             <img src="src/images/alura-pixel.png">        
         `;
-        const element = document.createElement("article");
-        element.setAttribute("class", "card-game");
-        element.insertAdjacentHTML("afterbegin", content);
-        element.addEventListener("click", this.flip, false);
-        return element;    
+        _element = document.createElement("article");
+        _element.setAttribute("class", "card-game");
+        _element.insertAdjacentHTML("afterbegin", content);
+        _element.addEventListener("click", this.flip, false);
+        return _element;    
     }
     
     this.flip = function () {    
-        let img = this.getElementsByTagName("img")[0];
-        if (this.flipped) {
-            this.setAttribute("class", "card-game");   
-            img.setAttribute("src", "src/images/alura-pixel.png");
+        let img = _element.getElementsByTagName("img")[0];
+        if (_flipped) {
+            _element.setAttribute("class", CLASS_FRONT);   
+            img.setAttribute("src", FRONT_IMG);
         } else {
-            this.setAttribute("class", "card-game-back"); 
-            img.setAttribute("src", backImgPath);
+            _element.setAttribute("class", CLASS_BACK); 
+            img.setAttribute("src", _backImg);
         }
-        this.flipped = !this.flipped;
+        _flipped = !_flipped;
     };
 }
 
