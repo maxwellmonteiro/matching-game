@@ -7,7 +7,7 @@ function PlayerName(name) {
     this.render = function () {
         const content = `${_name}`;   
         
-        _element = document.createElement('label');
+        _element = document.createElement('p');
         _element.classList.add("player-name");
         _element.insertAdjacentHTML("afterbegin", content);
         return _element;

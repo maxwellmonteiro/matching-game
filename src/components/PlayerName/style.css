@@ -1,4 +1,6 @@
-.player-name {
+.player-name {  
+  width: 130px; 
+  border: 4px solid transparent;   
   font-family: 'Press Start 2P';
   color: var(--color-floral-white);
 }
