@@ -2,9 +2,10 @@ import "./style.css";
 
 function GameCard(backImg, onClick = (card) => {}) {  
     const FRONT_IMG = GameCard.ALURA_FACE;
+    const BACK_IMG = backImg;
     const FRONT_CSS_CLASS = "game-card";
     const BACK_CSS_CLASS = "game-card-back";
-    var _flipped = false;       
+    //var _flipped = false;       
     var _element;  
     var _self = this;  
     
@@ -34,15 +35,24 @@ function GameCard(backImg, onClick = (card) => {}) {
 
     this.flip = function () {    
         let img = _element.getElementsByTagName("img")[0];
-        if (_flipped) {        
-            _element.setAttribute("class", FRONT_CSS_CLASS);   
-            img.src = FRONT_IMG;
-        } else {
-            _element.setAttribute("class", BACK_CSS_CLASS); 
-            img.src = backImg;
-        }
-        _flipped = !_flipped;
+        const otherFace = getOtherFace();
+        _element.setAttribute("class", otherFace.cssClass);   
+        img.src = otherFace.srcImg;       
     };
+
+    this.isFlipped = function () {
+        return _element.getAttribute("class") === BACK_CSS_CLASS;
+    }
+
+    function getOtherFace() {
+        let otherFace;
+        if (_element.getAttribute("class") === FRONT_CSS_CLASS) {
+            otherFace = { cssClass: BACK_CSS_CLASS, srcImg: BACK_IMG };
+        } else {
+            otherFace = { cssClass: FRONT_CSS_CLASS, srcImg: FRONT_IMG };
+        }
+        return otherFace;
+    }
     
     function handleClick() {                 
         _self.flip(); 

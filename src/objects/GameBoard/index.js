@@ -24,20 +24,20 @@ function GameBoard(cardsAmount = 3) {
         _cardFaces = duplicatedCardFaces;
     }
         
-    function _shuffle(cardFacesToShuffle) {
-        const shuffled = [];
+    function _shuffleFaces(cardFacesToShuffle) {
+        const shuffledFaces = [];
         for (let i = 0, len = cardFacesToShuffle.length; i < len; i++) {
             const randomFrom0To1000 = Math.random() * 1000;
             const randomInteger = Math.trunc(randomFrom0To1000);
             const position = randomInteger % (cardFacesToShuffle.length);    
             const theChosen = cardFacesToShuffle.splice(position, 1)[0];
-            shuffled.push(theChosen);
+            shuffledFaces.push(theChosen);
         }
-        return shuffled;
+        return shuffledFaces;
     }        
 
     function _createCards() {
-        const shuffledFaces = _shuffle(_cardFaces);              
+        const shuffledFaces = _shuffleFaces(_cardFaces);              
         shuffledFaces.forEach( sf => {  
             const onClickCallBack = (c) => {
                 checkMatch(c);
@@ -47,7 +47,11 @@ function GameBoard(cardsAmount = 3) {
     }
 
     function checkMatch(card) {
-        _selectedCards.push(card);
+        if (!_selectedCards.includes(card)) {
+            addFlippedCard(card, _selectedCards);
+        } else {
+            removeUnflippedCard(card, _selectedCards);
+        }
         const twoCardsFlipped = _selectedCards.length === 2;
         if (twoCardsFlipped) {
             processMatching(_selectedCards[0], _selectedCards[1]);
@@ -55,17 +59,29 @@ function GameBoard(cardsAmount = 3) {
         }
     }
 
+    function addFlippedCard(card, selectedCards) {
+        if (card.isFlipped()) {
+            selectedCards.push(card);
+        }
+    }
+
+    function removeUnflippedCard(card, selectedCards) {
+        if (!card.isFlipped()) {
+            selectedCards.splice(selectedCards.indexOf(card), 1);   
+        }
+    }
+
     function processMatching(card1, card2) {
         const matched = card1.getFace() === card2.getFace();
         if (!matched) {                 
-            flipCardsAfterTimeout([card1, card2]);
+            unflipCardsAfterTimeout([card1, card2]);
         } else { 
             disableCards([card1, card2]);             
         }
     }
 
     // Wait awhile so the player can see selected cards dit not match
-    function flipCardsAfterTimeout(selectedCards) {
+    function unflipCardsAfterTimeout(selectedCards) {
         _self.disable(); // disable clicks during timeout
         setTimeout(() => { 
             selectedCards.forEach(c => {
