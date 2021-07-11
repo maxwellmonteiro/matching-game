@@ -1,68 +1,84 @@
 import "./style.css";
-import CardGame from "../../components/CardGame";
-import ScoreBoard from "../ScoreBoard";
+import GameCard from "../../components/GameCard";
 
 function GameBoard(cardsAmount = 3) {
     var _self = this;
     var _element;        
-    var _cards = [];   
-    var _cardsAmount = cardsAmount; 
-    var _faces = [];  
-    var _cardsSelected = [];  
-    const _facesAvailable = [CardGame.FACE_JS, CardGame.FACE_HTML, CardGame.FACE_CSS];    
+    var _cards = [];       
+    var _cardFaces = [];  
+    var _selectedCards = [];  
+    const _availableFaces = [GameCard.JS_FACE, GameCard.HTML_FACE, GameCard.CSS_FACE];    
 
-    _createFaces();    
+    _createCardFaces();    
     _createCards();    
 
-    function _createFaces() {
-        for (let i = 0, k = 0; i < _cardsAmount; i++, k++) {            
-            if (k >= _facesAvailable.length) { // if faces pool is finished, return to begin
-                k = 0;
+    function _createCardFaces() {
+        const cardFaces = [];
+        for (let i = 0; i < cardsAmount; i++) {            
+            if (i >= _availableFaces.length) {
+                i = 0;
             }
-            _faces.push(_facesAvailable[k]);
-        }
-        // duplicate faces
-        _faces = _faces.concat(_faces);
+            cardFaces.push(_availableFaces[i]);
+        }   
+        const duplicatedCardFaces = [...cardFaces, ...cardFaces];
+        _cardFaces = duplicatedCardFaces;
     }
         
-    function _shuffle(toBeShuffled) {
+    function _shuffle(cardFacesToShuffle) {
         const shuffled = [];
-        for (let i = 0, len = toBeShuffled.length; i < len; i++) {
-            const r = Math.random() * 1000;
-            const t = Math.trunc(r);
-            const m = t % (toBeShuffled.length);    
-            shuffled.push(toBeShuffled.splice(m, 1)[0]);
+        for (let i = 0, len = cardFacesToShuffle.length; i < len; i++) {
+            const randomFrom0To1000 = Math.random() * 1000;
+            const randomInteger = Math.trunc(randomFrom0To1000);
+            const position = randomInteger % (cardFacesToShuffle.length);    
+            const theChosen = cardFacesToShuffle.splice(position, 1)[0];
+            shuffled.push(theChosen);
         }
         return shuffled;
     }        
 
     function _createCards() {
-        const shuffledImgs = _shuffle(_faces);              
-        shuffledImgs.forEach( si => {    
-            _cards.push(new CardGame(si, (c) => {
-                match(c);
-            }));            
-        });
-        return _cards;
+        const shuffledFaces = _shuffle(_cardFaces);              
+        shuffledFaces.forEach( sf => {  
+            const onClickCallBack = (c) => {
+                checkMatch(c);
+            }  
+            _cards.push(new GameCard(sf, onClickCallBack));            
+        });        
     }
 
-    function match(card) {
-        _cardsSelected.push(card);
-        if (_cardsSelected.length === 2) {
-            if (_cardsSelected[0].getFace() !== _cardsSelected[1].getFace()) { // not match
-                _self.disable(); // disable clicks during timeout
-                setTimeout(() => { // timeout for user to see not matched cards before flip again
-                    _cardsSelected[0].flip();
-                    _cardsSelected[1].flip();
-                    _self.enable();
-                    _cardsSelected = [];
-                }, 800);
-            } else { // match
-                _cardsSelected[0].disable();
-                _cardsSelected[1].disable();
-                _cardsSelected = [];
-            }
+    function checkMatch(card) {
+        _selectedCards.push(card);
+        const twoCardsFlipped = _selectedCards.length === 2;
+        if (twoCardsFlipped) {
+            processMatching(_selectedCards[0], _selectedCards[1]);
+            _selectedCards = [];
         }
+    }
+
+    function processMatching(card1, card2) {
+        const matched = card1.getFace() === card2.getFace();
+        if (!matched) {                 
+            flipCardsAfterTimeout([card1, card2]);
+        } else { 
+            disableCards([card1, card2]);             
+        }
+    }
+
+    // Wait awhile so the player can see selected cards dit not match
+    function flipCardsAfterTimeout(selectedCards) {
+        _self.disable(); // disable clicks during timeout
+        setTimeout(() => { 
+            selectedCards.forEach(c => {
+                c.flip();
+            })           
+            _self.enable();          
+        }, 800);
+    }
+
+    function disableCards(selectedCards) {
+        selectedCards.forEach(c => {
+            c.disable();
+        })        
     }
 
     this.render = function () {   

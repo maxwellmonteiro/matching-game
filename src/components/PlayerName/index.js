@@ -1,4 +1,4 @@
-import "./style.css"; // vite stuff, not vanilla js
+import "./style.css";
 
 function PlayerName(name) {
     var _name = name;   
