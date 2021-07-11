@@ -2,8 +2,8 @@ import "./style.css";
 
 function GameCard(backImg, onClick = (card) => {}) {  
     const FRONT_IMG = GameCard.ALURA_FACE;
-    const FRONT_CSS_CLASS = "card-game";
-    const BACK_CSS_CLASS = "card-game-back";
+    const FRONT_CSS_CLASS = "game-card";
+    const BACK_CSS_CLASS = "game-card-back";
     var _flipped = false;       
     var _element;  
     var _self = this;  
